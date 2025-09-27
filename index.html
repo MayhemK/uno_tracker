@@ -4,42 +4,178 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Uno Tracker</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"
-    defer></script>
+  <title>UNO Direction & Color Tracker</title>
+  <!-- Load Tailwind CSS for modern utility classes -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Configure Inter font and ensure the colors are available -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'uno-red': '#E4002B',
+            'uno-yellow': '#F4B000',
+            'uno-green': '#009B3A',
+            'uno-blue': '#005CA9',
+          },
+        }
+      }
+    }
+  </script>
+  <!-- Material Design Icons (as requested by user's original link) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Custom Styling for the Arrow and Blocks */
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Container for the main color display */
+    #color-block {
+      transition: background-color 0.4s ease-in-out;
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      /* Indicates it's interactive */
+    }
+
+    /* Styling for the direction arrow icon */
+    #arrowBlock {
+      font-size: 8rem;
+      transition: transform 0.3s ease-in-out, text-shadow 0.3s ease;
+      text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+    }
+
+    /* Styling for the color swatches */
+    .color-swatch {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      border: 4px solid white;
+      transition: all 0.1s ease-out;
+      user-select: none;
+    }
+
+    .color-swatch:hover {
+      opacity: 0.85;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .color-swatch:active {
+      opacity: 0.7;
+      transform: scale(0.98);
+    }
+  </style>
 </head>
 
-<body>
-  <section id="color-block" class="container-fluid colorBlock">
-    <div class="row text-center">
-      <div class="col-12">
-        <div id="arrowBlock" class="mdi mdi-cached bigArrow text-light" style="min-height: 75dvh;"
-        type="button" onclick="changeOrder()"></div>
-      </div>
-    </div>
+<body class="bg-gray-900">
+  <!-- Top Section: Color Block and Direction Arrow -->
+  <!-- Note: Removed the problematic 'onclick' attribute and added ID for JS handler -->
+  <section id="color-block" class="w-full bg-uno-red flex-grow flex justify-center items-center">
+    <div id="arrowBlock" class="mdi mdi-cached text-white opacity-80" aria-label="Current direction indicator"></div>
   </section>
-  <section class="container-fluid">
-    <div class="row text-center align-items-stretch" style="min-height: 25dvh; height: 100%;">
-      <div class="col-3" type="button" onclick="changeColor('red')" style="background-color: red;">
-        R
-      </div>
-      <div class="col-3" type="button" onclick="changeColor('yellow')" style="background-color: yellow;">
-        Y
-      </div>
-      <div class="col-3" type="button" onclick="changeColor('green')" style="background-color: green;">
-        G
-      </div>
-      <div class="col-3" type="button" onclick="changeColor('blue')" style="background-color: blue;">
-        B
-      </div>
-    </div>`
+
+  <!-- Bottom Section: Color Selector Buttons -->
+  <section id="color-selector" class="flex w-full h-32">
+    <!-- Removed Bootstrap col-3 and used Tailwind flex utilities for responsiveness -->
+    <div id="red-swatch" data-color="uno-red" class="color-swatch bg-uno-red w-1/4 rounded-tl-lg">R</div>
+    <div id="yellow-swatch" data-color="uno-yellow" class="color-swatch bg-uno-yellow w-1/4">Y</div>
+    <div id="green-swatch" data-color="uno-green" class="color-swatch bg-uno-green w-1/4">G</div>
+    <div id="blue-swatch" data-color="uno-blue" class="color-swatch bg-uno-blue w-1/4 rounded-tr-lg">B</div>
   </section>
-  <script src="app.js"></script>
+
+  <!-- 
+    CRITICAL FIX: Placed script at the end of the body. 
+    It now correctly attaches event listeners to the fully loaded elements.
+  -->
+  <script>
+    // @ts-nocheck
+
+    // Initializing state with 0 for the 0/1 toggle logic
+    const gameState = {
+      currentColor: 'uno-red',
+      currentDirection: 0 // 0 or 1. 1 = clockwise, 0 = counter-clockwise
+    };
+
+    /**
+     * Updates the UI based on the current gameState.
+     */
+    function updateUI() {
+      const arrowBlockElem = document.getElementById('arrowBlock');
+      const colorBlockElem = document.getElementById('color-block');
+
+      if (!arrowBlockElem || !colorBlockElem) {
+        console.error("DOM elements not found.");
+        return;
+      }
+
+      // 1. Update Color Block
+      colorBlockElem.style.backgroundColor = gameState.currentColor;
+
+      // 2. Update Direction Arrow (Mapping 0/1 state to -1/1 scale)
+      const scaleValue = gameState.currentDirection === 1 ? 1 : -1;
+      arrowBlockElem.style.transform = `scaleX(${scaleValue})`;
+
+      const directionText = gameState.currentDirection === 1 ? 'clockwise' : 'counter-clockwise';
+      console.log(`State: Color is ${gameState.currentColor}, Direction is ${directionText} (${gameState.currentDirection})`);
+    }
+
+    /**
+     * Changes the current UNO color.
+     * @param {string} newColor - The Tailwind color class (e.g., 'uno-red').
+     */
+    function changeColor(newColor) {
+      gameState.currentColor = newColor;
+      updateUI();
+    }
+
+    /**
+     * Toggles the game direction between 0 (counter-clockwise) and 1 (clockwise)
+     * using the Bitwise XOR operator (^= 1).
+     */
+    function changeOrder() {
+      // Toggle between 0 and 1
+      gameState.currentDirection ^= 1;
+      updateUI();
+    }
+
+    /**
+     * Attaches event listeners to the DOM elements after the page is loaded.
+     * This avoids the ReferenceError caused by inline onclick.
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      // Attach handler to the main color block/arrow for toggling direction
+      const arrowBlockElem = document.getElementById('arrowBlock');
+      if (arrowBlockElem) {
+        arrowBlockElem.addEventListener('click', changeOrder);
+      }
+
+      // Attach handlers to the color swatches
+      document.querySelectorAll('#color-selector > div').forEach(swatch => {
+        const color = swatch.getAttribute('data-color');
+        if (color) {
+          swatch.addEventListener('click', () => changeColor(color));
+        }
+      });
+
+      // Initial setup
+      updateUI();
+    });
+
+  </script>
 </body>
 
 </html>
