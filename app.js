@@ -10,3 +10,12 @@ function testGreen() {
 function testBlue() {
   console.log("the world is Blue")
 }
+function toggleOrder(bool) {
+  const rotation = bool
+  if (rotation == 0) {
+    return rotation
+  } 
+  if (rotation == 1) {
+    return rotation
+  }
+}
