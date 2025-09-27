@@ -1,21 +1,16 @@
-function testRed() {
-  console.log("the world is Red")
+const gameState = {
+  currentColor: 'red',
+  currentDirection: 0
 }
-function testYellow() {
-  console.log("the world is Yellow")
-}
-function testGreen() {
-  console.log("the world is Green")
-}
-function testBlue() {
-  console.log("the world is Blue")
-}
-function toggleOrder(bool) {
-  const rotation = bool
-  if (rotation == 0) {
-    return rotation
-  } 
-  if (rotation == 1) {
-    return rotation
-  }
+
+const colorBlockElem = document.getElementById('color-block')
+
+/**
+ * @param {string} newColor
+ */
+function changeColor(newColor) {
+  gameState.currentColor = newColor
+  colorBlockElem.style.backgroundColor = newColor
+
+  console.log(`the color is now ${newColor}`)
 }

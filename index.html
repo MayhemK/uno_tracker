@@ -15,25 +15,25 @@
 </head>
 
 <body>
-  <section class="container-fluid colorBlock">
+  <section id="color-block" class="container-fluid colorBlock">
     <div class="row text-center">
       <div class="col-12">
-        <div class="mdi mdi-tag-arrow-right-outline" style="min-height: 75dvh;">hello</div>
+        <div class="mdi mdi-cached bigArrow text-light" style="min-height: 75dvh;"></div>
       </div>
     </div>
   </section>
   <section class="container-fluid">
     <div class="row text-center align-items-stretch" style="min-height: 25dvh; height: 100%;">
-      <div class="col-3" type="button" onclick="testRed()" style="background-color: red;">
+      <div class="col-3" type="button" onclick="changeColor('red')" style="background-color: red;">
         R
       </div>
-      <div class="col-3" type="button" onclick="testYellow()" style="background-color: yellow;">
+      <div class="col-3" type="button" onclick="changeColor('yellow')" style="background-color: yellow;">
         Y
       </div>
-      <div class="col-3" type="button" onclick="testGreen()" style="background-color: green;">
+      <div class="col-3" type="button" onclick="changeColor('green')" style="background-color: green;">
         G
       </div>
-      <div class="col-3" type="button" onclick="testBlue()" style="background-color: blue;">
+      <div class="col-3" type="button" onclick="changeColor('blue')" style="background-color: blue;">
         B
       </div>
     </div>`
