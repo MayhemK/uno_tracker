@@ -2,12 +2,31 @@ body {
   background-color: gray;
 }
 
+/* Define the CSS variable for the background color. 
+  The default color is set by the JS/inline style until it's controlled by the class.
+*/
 .colorBlock {
   min-height: 75dvh;
-  background-color: red;
+  /* Initial color is set in the HTML/JS logic */
+  display: flex; /* Helps center the arrow */
+  justify-content: center;
+  align-items: center;
 }
 
 .bigArrow {
   font-size: 20rem;
-  
+  transition: transform 0.3s ease; /* Smooth rotation */
+  display: block;
+}
+
+/* Rotation Classes 
+  0deg (CW/Right) is default.
+  180deg (CCW/Left) is the reversed state.
+*/
+.rotate-cw {
+    transform: rotate(0deg);
+}
+
+.rotate-ccw {
+    transform: rotate(180deg);
 }
