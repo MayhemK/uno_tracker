@@ -34,3 +34,11 @@ function setGame(mode) {
   gameState.currentMode = mode
 
 }
+
+function addCount(plusCount) {
+  var count = 0
+  var total = 0
+  total = total + count + plusCount
+  gameState.currentAddCount = total
+  console.log(count, total)
+}

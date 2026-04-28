@@ -19,7 +19,7 @@
   <nav id="navBar" class="navbar">
     <form class="container-fluid justify-content-start">
       <button class="btn btn-success me-2" type="button"> Uno! </button>
-      <button class="btn btn-sm btn-secondary" type="button">Uno No Mercy! </button>
+      <button class="btn btn-sm btn-secondary me-2" type="button">Uno No Mercy! </button>
       <a class="navbar-brand" href="">
         <img src="https://static.wikia.nocookie.net/logopedia/images/8/81/Uno.svg/revision/latest?cb=20180326065338"
           alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
@@ -33,6 +33,17 @@
         <div id="arrowBlock" style="min-height: 75dvh;" type="button" onclick="changeOrder()">
           <i class="mdi mdi-rotate-right bigArrow text-light " style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-fluid">
+    <div class="row my-3 text-center">
+      <div class="col-6">
+        <div type="button" onclick="addCount(2)" class="fs-2 fw-bold">+2</div>
+      </div>
+      <div class="col-6">
+        <div type="button" onclick="addCount(4)" class="fs-2 fw-bold">+4</div>
       </div>
     </div>
   </section>
